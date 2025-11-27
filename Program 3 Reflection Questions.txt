@@ -1,0 +1,19 @@
+Which function was the most useful and why?
+
+The most useful function is cafe() for two reasons. First, I'm proud of it because it sat at the center of everything that was difficult about designing this program and required me to think deeply like a business and an engineer simultaneously. Second, it runs the full customer interaction from showing the menu to confirming and returning an approved order. Essentially, every path of the program ties to cafe(). I designed cafe() to only return a user's cart once the user has verified their order, a design choice that increased the complexity and scale of the function, and also increased the need for awareness and tight control over the state of information the function returns.
+
+Describe one loop and why you chose for/while.
+
+In cafe_flow() I use while True to simulate a real cafe staying open for multiple customers. I chose while instead of for because there is no fixed number of customers. The only thing that ends that loop is the user answering n to "New customer?" after a receipt prints. Inside that same loop, I also have another while True that forces the answer to be only y or n, so bad input can’t accidentally close the cafe or lock it up. These loops make the program behave like a real shift, running until the business decides to shut down for the day.
+
+Show a branching example and its effect
+
+The most important and interesting branching is in edit_order(). The whole function is a design choice that makes the ordering experience more in alignment with purchasing conventions. First the user chooses what kind of change they want to apply to their order. They can either change the quantity of an item, remove an item, or add more items. If they pick "change quantity," I validate the new quantity using the same validation rules as the first time they added the item. If they pick "remove item," I pop that item out of the cart and check if the cart is now empty. If they pick "add more items," I return a flag back to cafe() that sends the user  back into the ordering phase instead of forcing them to restart the order.
+
+How did you stop invalid input from breaking your program?
+
+My approach was to never trust the user's first input. For numbers, I wrap int(input()) in try/except ValueError so strings do not crash the program, then I also check logical rules like quantity must be at least 1 but less than 30. For menu choices, I only accept items that exist in the menu dictionary and loop until the user gives one. For yes/no questions, I do the same thing until I get 'y' or 'n'. Every input path either returns something valid or doesn't return at all, which is how I keep the program stable without using globals.
+
+What part would you test first and how?
+
+I would (-and did- countless times) test the cycle between confirm_order() and edit_order() inside cafe(), which is the most vulnerable place in the program with the highest likelihood for logic to fail or the program to crash. Mapping out what information needed to be passed between the functions, figuring out looping, and when to call functions was the biggest challenge. In edit_order(), I initially had the user select an item to perform an operation on, instead of an operation to perform on an item, and that resulted in logic errors when the user simply wanted to add more items, because they would have to select an item to edit in order to add more items, which was a huge UX issue. I also check cases like removing the only item in the cart, changing a quantity to 0 or 30, trying to check out with an empty cart, and jumping in and out of "add more items" to see if the program keeps state.
